@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DAO;
+package labb.DAO;
 
-import DataStructures.Friend;
+import labb.DataStructures.Friend;
 import java.util.TreeMap;
 
 /**

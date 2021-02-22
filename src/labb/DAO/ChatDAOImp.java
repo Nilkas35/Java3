@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package DAO;
+package labb.DAO;
 
-import DataStructures.Friend;
-import DataStructures.Logs;
+import labb.DataStructures.Friend;
+import labb.DataStructures.Logs;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

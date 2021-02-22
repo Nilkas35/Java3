@@ -5,12 +5,12 @@
  */
 package labb.Windows;
 
-import DAO.ChatDAO;
-import DAO.ChatDAOImp;
-import DAO.FriendDAO;
-import DAO.FriendDAOImp;
-import DataStructures.Friend;
-import DataStructures.Logs;
+import labb.DAO.ChatDAO;
+import labb.DAO.ChatDAOImp;
+import labb.DAO.FriendDAO;
+import labb.DAO.FriendDAOImp;
+import labb.DataStructures.Friend;
+import labb.DataStructures.Logs;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
