@@ -6,6 +6,7 @@
 package labb.DAO;
 
 import java.util.List;
+import labb.DataStructures.Message;
 
 /**
  *
@@ -16,8 +17,8 @@ public interface ChatDAO {
     public String getReceiever();
     public String getChatUser();    
     public void saveChats();
-    
-//    public void  addMessage( Message msg );
-//    public List< Message > getMessages();
-
+    public Boolean getChatExist(String user);
+    public List<Message> getChat(String logname);
+    public void StartReader(String logname);
+    public void  addMessage(String msg);
 }

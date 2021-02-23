@@ -5,11 +5,11 @@
  */
 package labb.DAO;
 
-import labb.DataStructures.Friend;
-import labb.DataStructures.Logs;
+import labb.DataStructures.Message;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,8 +24,9 @@ import labb.Readers.ChatReader;
 public class ChatDAOImp implements ChatDAO {
     private ChatReader chatReader = new ChatReader();
     private String chatUser = "EURAKARTE";
-    private String chattingWith = "";
-    private TreeMap<String, List<Logs>> loadedChats;
+    private String chattingWith = "EURAKARTE";
+    private TreeMap<String, List<Message>> loadedChats;
+    private List<Message> chat;
     
     public ChatDAOImp(){
     }
@@ -63,13 +64,10 @@ public class ChatDAOImp implements ChatDAO {
 
     @Override
     public void saveChats() {
-        System.out.println("Saveing chats to files");
         loadedChats = chatReader.getLoadedChats();
-        System.out.println(chatReader.getLoadedChats());
-        for(Map.Entry<String, List<Logs>> entry:loadedChats.entrySet()){
-            System.out.println("itterate though the treemap");
+        for(Map.Entry<String, List<Message>> entry:loadedChats.entrySet()){
             String key = entry.getKey();
-            List<Logs> b = entry.getValue();
+            List<Message> b = entry.getValue();
             File file = new File(System.getProperty("user.dir") + "\\logs\\" + key + ".log");
             try {    
                 FileWriter fileWriter = new FileWriter(file, false);
@@ -77,25 +75,47 @@ public class ChatDAOImp implements ChatDAO {
                 for(int i = 0; i < b.size(); i++){
                 String tagCheck = b.get(i).getTag();
                 if(tagCheck != null) {
-                    System.out.println("<" + b.get(i).getUser() + "[" + b.get(i).getTag() + "]>" + b.get(i).getMsg() + "\n");
-                    fileWriter.write("<" + b.get(i).getUser() + "[" + b.get(i).getTag() + "]>" + b.get(i).getMsg() + "\n");
+                    fileWriter.write("<" + b.get(i).getAuthor() + "[" + b.get(i).getTag() + "]>" + b.get(i).getMsg() + "\n");
                     }
                 else if (tagCheck == null){
-                    System.out.println("<" + b.get(i).getUser() + ">" + b.get(i).getMsg() + "\n");
-                    fileWriter.write("<" + b.get(i).getUser() + ">" + b.get(i).getMsg() + "\n");
+                    fileWriter.write("<" + b.get(i).getAuthor() + ">" + b.get(i).getMsg() + "\n");
                     }
                 else {
-                    System.out.println("<" + b.get(i).getUser() + ">" + b.get(i).getMsg() + "\n");
-                    fileWriter.write("<" + b.get(i).getUser() + ">" + b.get(i).getMsg() + "\n");
+                    fileWriter.write("<" + b.get(i).getAuthor() + ">" + b.get(i).getMsg() + "\n");
                     }
                 }
-                System.out.println("---------------------------------------------");
-                
+                fileWriter.close();
             } catch (IOException ex) {
                 Logger.getLogger(ChatDAOImp.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }        
+    }
+    
+    @Override
+    public Boolean getChatExist(String user){
+        return chatReader.chatExists(user);
+    }
+
+    @Override
+    public List<Message> getChat(String logname) {
+        return chatReader.getChat(logname);
+    }
+
+    @Override
+    public void StartReader(String logname) {
+        try {
+            chatReader.StartReader(logname);
+        } catch (IOException ex) {
+            Logger.getLogger(ChatDAOImp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+    }
+
+    @Override
+    public void addMessage(String msg) {
+        Message currentLog = new Message(null, null, null);        
+        currentLog.setAuthor(chatUser);
+        currentLog.setMsg(msg);
+        chatReader.getChat(chattingWith).add(currentLog);
     }
     
 }

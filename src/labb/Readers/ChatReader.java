@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-import labb.DataStructures.Logs;
+import labb.DataStructures.Message;
 
 /**
  *
@@ -21,10 +21,13 @@ import labb.DataStructures.Logs;
  */
 public class ChatReader {
     private final String logfolder = System.getProperty("user.dir") + "\\logs\\";
-    private final TreeMap<String, List<Logs>> loadedChats = new TreeMap<>();
+    private TreeMap<String, List<Message>> loadedChats = new TreeMap<>();
     
     
-    public void ChatReader(String logname) throws IOException {
+    public void ChatReader(){
+    }
+    
+    public void StartReader(String logname) throws IOException {
         logname = CheckFile(logname);
         ReadFile(logname);
     }
@@ -49,13 +52,13 @@ public class ChatReader {
             FileReader fr = new FileReader(logFile);
             BufferedReader br=new BufferedReader(fr);
             String line;
-            List<Logs> chat = new ArrayList<>();
+            List<Message> chat = new ArrayList<>();
             while((line = br.readLine()) != null)  {
-                Logs currentLog = new Logs(null, null, null);
+                Message currentLog = new Message(null, null, null);
                 if(line.indexOf('>') != -1){
-                    currentLog.setUser(line.substring(1,line.indexOf('>')));
+                    currentLog.setAuthor(line.substring(1,line.indexOf('>')));
                     if(line.indexOf(']') != -1){
-                        currentLog.setUser(line.substring(1,line.indexOf('[')));
+                        currentLog.setAuthor(line.substring(1,line.indexOf('[')));
                         currentLog.setTag(line.substring(line.indexOf('[')+1,line.indexOf(']')));
                     }
                 }
@@ -65,19 +68,19 @@ public class ChatReader {
             loadedChats.put(logname, chat);
         }
         catch (FileNotFoundException e){
-            System.out.println("Not Found");
+            System.out.println("No File Found");
         }
     }
     
      /**
      * @return the loadedChats
      */
-    public TreeMap<String, List<Logs>> getLoadedChats() {
-        System.out.println("chatReader files: " + loadedChats);
+    public TreeMap<String, List<Message>> getLoadedChats() {
+//        System.out.println("chatReader files: " + loadedChats);
         return loadedChats;
     }
     
-    public List<Logs> getChat(String logname) {
+    public List<Message> getChat(String logname) {
         return loadedChats.get(logname);
     }
     

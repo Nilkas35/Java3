@@ -63,8 +63,7 @@ public class FriendReader {
     
     public void saveFriendList(TreeMap<String,Friend> friends) throws IOException{
         File file = new File(System.getProperty("user.dir") + "\\logs\\friends.list");
-        FileWriter fileWriter = new FileWriter(file, false);        
-        
+        FileWriter fileWriter = new FileWriter(file, false);
         for(Map.Entry<String, Friend> entry:friends.entrySet()){
             Friend b=entry.getValue();
             String tagCheck = b.getTag();

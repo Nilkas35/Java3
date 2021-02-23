@@ -18,11 +18,11 @@ import labb.Readers.FriendReader;
  * @author nikla
  */
 public class FriendDAOImp implements FriendDAO{
-    private final FriendReader friendReader;
+    private final FriendReader friendReader = new FriendReader();
     private static TreeMap<String, Friend> friendlist;
     
     public FriendDAOImp(){
-        friendReader = new FriendReader();
+        friendReader.FriendReader();
         friendlist = friendReader.getFriendlist();
     }
 
@@ -44,6 +44,7 @@ public class FriendDAOImp implements FriendDAO{
 
     @Override
     public TreeMap<String, Friend> getAllFriends() {
+        
         return friendlist;
     }
 

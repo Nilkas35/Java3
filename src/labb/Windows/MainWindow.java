@@ -10,7 +10,7 @@ import labb.DAO.ChatDAOImp;
 import labb.DAO.FriendDAO;
 import labb.DAO.FriendDAOImp;
 import labb.DataStructures.Friend;
-import labb.DataStructures.Logs;
+import labb.DataStructures.Message;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +29,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import labb.Readers.ChatReader;
 import labb.Readers.FriendReader;
 import static labb.Readers.FriendReader.getFriendlist;
 
@@ -44,7 +43,6 @@ public class MainWindow extends JFrame implements ActionListener, ListSelectionL
     private final MenuBar menuBar = new MenuBar();
     private final FriendPanel friendPanel = new FriendPanel();
     private final ChatPanel chatPanel = new ChatPanel();
-    private final ChatReader chatReader = new ChatReader();
     
     private final ChatDAO chatDAO = new ChatDAOImp();
     private final FriendDAO friendDAO = new FriendDAOImp();
@@ -95,8 +93,7 @@ public class MainWindow extends JFrame implements ActionListener, ListSelectionL
     
     private void FriendListWriter(){
         friendPanel.getListModel().clear();
-        FriendReader.FriendReader();
-        for(Map.Entry<String, Friend> entry:getFriendlist().entrySet()){
+        for(Map.Entry<String, Friend> entry:friendDAO.getAllFriends().entrySet()){
             Friend b=entry.getValue();
             if(b.getTag() != null) {
                 friendPanel.getListModel().addElement(b.getNickname() + "[" + b.getTag() + "]");
@@ -106,28 +103,28 @@ public class MainWindow extends JFrame implements ActionListener, ListSelectionL
                 friendPanel.getListModel().addElement(b.getNickname());
             }
         }
-    }   
+    }
     
     
     public void ChatWriter(String nickName) throws IOException{
-        List<Logs> currentChatText;
-        if(chatReader.chatExists(nickName)){
-            currentChatText = chatReader.getChat(nickName);
+        List<Message> currentChatText;
+        if(chatDAO.getChatExist(nickName)){
+            currentChatText = chatDAO.getChat(nickName);
         }
         else {
-            chatReader.ChatReader(nickName);
-            currentChatText = chatReader.getChat(nickName);
+            chatDAO.StartReader(nickName);
+            currentChatText = chatDAO.getChat(nickName);
         }
         chatPanel.getChatText().setText("");
         if(currentChatText != null){
             for(int i = 0; i < currentChatText.size(); i++){
             String tagCheck = currentChatText.get(i).getTag();
                 if(tagCheck != null) {
-                    chatPanel.getChatText().append("<" + currentChatText.get(i).getUser() + "[" + currentChatText.get(i).getTag() + "]>" + currentChatText.get(i).getMsg() + "\n");
+                    chatPanel.getChatText().append("<" + currentChatText.get(i).getAuthor() + "[" + currentChatText.get(i).getTag() + "]>" + currentChatText.get(i).getMsg() + "\n");
                 } else if (tagCheck == null){
-                    chatPanel.getChatText().append("<" + currentChatText.get(i).getUser() + ">" + currentChatText.get(i).getMsg() + "\n");
+                    chatPanel.getChatText().append("<" + currentChatText.get(i).getAuthor() + ">" + currentChatText.get(i).getMsg() + "\n");
                 } else {
-                    chatPanel.getChatText().append("<" + currentChatText.get(i).getUser() + ">" + currentChatText.get(i).getMsg() + "\n");
+                    chatPanel.getChatText().append("<" + currentChatText.get(i).getAuthor() + ">" + currentChatText.get(i).getMsg() + "\n");
                 }
             }
         }
@@ -155,7 +152,8 @@ public class MainWindow extends JFrame implements ActionListener, ListSelectionL
                 }
                 if(publicCheckBox.isSelected()){
                     try {
-                        this.ChatWriter(chatDAO.getChatUser());
+                        chatDAO.setReciever(chatDAO.getChatUser());
+                        this.ChatWriter(chatDAO.getReceiever());
                     } catch (IOException ex) {
                         Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -203,6 +201,7 @@ public class MainWindow extends JFrame implements ActionListener, ListSelectionL
         }
         else if(e.getActionCommand() == "send"){
             String msg = chatPanel.getMessageInput().getText();
+            chatDAO.addMessage(msg);
             if(msg.length() > 0){
                 chatPanel.getChatText().append("<" + chatDAO.getChatUser() + ">" + msg + "\n");
                 chatPanel.getMessageInput().setText("");
