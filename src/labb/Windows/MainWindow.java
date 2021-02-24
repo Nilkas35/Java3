@@ -29,8 +29,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import labb.Readers.FriendReader;
-import static labb.Readers.FriendReader.getFriendlist;
 
 /**
  *
