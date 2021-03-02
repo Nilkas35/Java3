@@ -13,13 +13,8 @@ import java.util.TreeMap;
  * @author nikla
  */
 public interface FriendDAO {
-    
-    //functions
+
     public void changeFriendInfo(String user, int attribute, String value);
-    
-    //get
     public TreeMap<String,Friend> getAllFriends();
-    
-    //set
     public void saveFriendList();
 }

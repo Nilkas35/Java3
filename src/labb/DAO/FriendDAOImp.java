@@ -44,7 +44,6 @@ public class FriendDAOImp implements FriendDAO{
 
     @Override
     public TreeMap<String, Friend> getAllFriends() {
-        
         return friendlist;
     }
 
